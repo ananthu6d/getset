@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="GetterSetter - Automatically generate C++ getters and setters.">
+    <title>GetterSetter | C++ Code Generator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <header>
+            <h1 id="main-title">GetterSetter</h1>
+            <p>Paste your C++ member variables below to generate getters, setters, and initialization methods instantly.</p>
+        </header>
+
+        <main class="split-view">
+            <!-- Left Side: Input -->
+            <section class="panel input-panel">
+                <div class="panel-header">
+                    <h2 id="input-heading">Input Variables</h2>
+                </div>
+                <textarea id="input-textarea" spellcheck="false" placeholder="int     mesi_CostDistributionCode;&#10;string  meC_CompanyName;&#10;char*   pscL_Buffer[50];"></textarea>
+            </section>
+
+            <!-- Right Side: Output -->
+            <section class="panel output-panel">
+                <div class="panel-header">
+                    <h2 id="output-heading">Generated Code</h2>
+                    <button id="copy-btn" class="btn-copy">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                        Copy to Clipboard
+                    </button>
+                </div>
+                <textarea id="output-textarea" readonly spellcheck="false" placeholder="Your generated getters and setters will appear here..."></textarea>
+            </section>
+        </main>
+    </div>
+
+    <div id="toast" class="toast">Copied to clipboard!</div>
+
+    <script src="script.js"></script>
+</body>
+</html>
