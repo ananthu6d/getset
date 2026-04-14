@@ -24,9 +24,8 @@ function parseLine(line) {
     if (!match) return null;
 
     let rawType = match[1].trim();
-    // Normalize spaces in type
     rawType = rawType.replace(/\s+/g, ' ');
-    
+
     const varName = match[2];
     const arrayBounds = match[3] || '';
     const isArray = arrayBounds.length > 0;
@@ -47,14 +46,12 @@ function parseLine(line) {
 function generateCode() {
     const text = inputTextArea.value;
     const lines = text.split('\n');
-
     let setters = [];
     let getters = [];
     let initLines = [];
 
     lines.forEach(line => {
         if (!line.trim()) return;
-
         const parsed = parseLine(line);
         if (!parsed) return;
 
@@ -70,8 +67,12 @@ function generateCode() {
         }
         setters.push(`void mcfn_set${baseName}(const ${paramType}& ${paramName}) { ${setterBody} }`);
 
-        // Getter Generation
-        getters.push(`${paramType} mcfn_get${baseName}() const { return ${varName}; }`);
+        // Getter Generation — fix: use const char* return type for char arrays
+        let getterReturnType = paramType;
+        if (rawType.includes('char') && isArray) {
+            getterReturnType = 'const char*';
+        }
+        getters.push(`${getterReturnType} mcfn_get${baseName}() const { return ${varName}; }`);
 
         // Init Generation
         if (rawType.includes('string')) {
@@ -91,7 +92,7 @@ function generateCode() {
     let outputParts = [];
     if (setters.length > 0) outputParts.push(setters.join('\n'));
     if (getters.length > 0) outputParts.push(getters.join('\n'));
-    
+
     if (initLines.length > 0) {
         const initMethod = `void mcfn_initilize()\n{\n${initLines.join('\n')}\n}`;
         outputParts.push(initMethod);
@@ -103,7 +104,6 @@ function generateCode() {
 copyBtn.addEventListener('click', async () => {
     const textToCopy = outputTextArea.value;
     if (!textToCopy) return;
-
     try {
         await navigator.clipboard.writeText(textToCopy);
         toast.classList.add('show');
@@ -113,5 +113,5 @@ copyBtn.addEventListener('click', async () => {
     }
 });
 
-// Run once on load just in case textarea is pre-filled
+// Run once on load in case textarea is pre-filled
 generateCode();
