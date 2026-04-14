@@ -70,7 +70,7 @@ function generateCode() {
         // Getter Generation — fix: use const char* return type for char arrays
         let getterReturnType = paramType;
         if (rawType.includes('char') && isArray) {
-            getterReturnType = 'const char*';
+            getterReturnType = 'char*';
         }
         getters.push(`${getterReturnType} mcfn_get${baseName}() const { return ${varName}; }`);
 
