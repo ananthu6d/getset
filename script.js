@@ -65,12 +65,18 @@ function generateCode() {
         } else {
             setterBody = `${varName} = ${paramName};`;
         }
-        setters.push(`void mcfn_set${baseName}(const ${paramType}& ${paramName}) { ${setterBody} }`);
 
-        // Getter Generation — fix: use const char* return type for char arrays
+        // Character arrays are C-style strings, so they require a pointer
+        // parameter instead of a reference to a single character.
+        const setterParam = rawType.includes('char') && isArray
+            ? `const char* ${paramName}`
+            : `const ${paramType}& ${paramName}`;
+        setters.push(`void mcfn_set${baseName}(${setterParam}) { ${setterBody} }`);
+
+        // Getter Generation — return a const char* for char arrays
         let getterReturnType = paramType;
         if (rawType.includes('char') && isArray) {
-            getterReturnType = 'char*';
+            getterReturnType = 'const char*';
         }
         getters.push(`${getterReturnType} mcfn_get${baseName}() const { return ${varName}; }`);
 
